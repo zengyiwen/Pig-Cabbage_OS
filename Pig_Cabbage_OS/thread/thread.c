@@ -50,13 +50,8 @@ static pid_t allocate_pid(void) {
    lock_release(&pid_lock);
    return next_pid;
 }
-
-/* 初始化线程栈thread_stack,将待执行的函数和参数放到thread_stack中相应的位置 */
 void thread_create(struct task_struct* pthread, thread_func function, void* func_arg) {
-   /* 先预留中断使用栈的空间,可见thread.h中定义的结构 */
    pthread->self_kstack -= sizeof(struct intr_stack);
-
-   /* 再留出线程栈空间,可见thread.h中定义 */
    pthread->self_kstack -= sizeof(struct thread_stack);
    struct thread_stack* kthread_stack = (struct thread_stack*)pthread->self_kstack;
    kthread_stack->eip = kernel_thread;
@@ -72,7 +67,7 @@ void init_thread(struct task_struct* pthread, char* name, int prio) {
    strcpy(pthread->name, name);
 
    if (pthread == main_thread) {
-/* 由于把main函数也封装成一个线程,并且它一直是运行的,故将其直接设为TASK_RUNNING */
+
       pthread->status = TASK_RUNNING;
    } else {
       pthread->status = TASK_READY;
@@ -87,19 +82,18 @@ void init_thread(struct task_struct* pthread, char* name, int prio) {
    pthread->stack_magic = 0x19870916;	  // 自定义的魔数
 }
 
-/* 创建一优先级为prio的线程,线程名为name,线程所执行的函数是function(func_arg) */
+
 struct task_struct* thread_start(char* name, int prio, thread_func function, void* func_arg) {
-/* pcb都位于内核空间,包括用户进程的pcb也是在内核空间 */
    struct task_struct* thread = get_kernel_pages(1);
    init_thread(thread, name, prio);
    thread_create(thread, function, func_arg);
 
-   /* 确保之前不在队列中 */
+  
    ASSERT(!elem_find(&thread_ready_list, &thread->general_tag));
    /* 加入就绪线程队列 */
    list_append(&thread_ready_list, &thread->general_tag);
 
-   /* 确保之前不在队列中 */
+  
    ASSERT(!elem_find(&thread_all_list, &thread->all_list_tag));
    /* 加入全部线程队列 */
    list_append(&thread_all_list, &thread->all_list_tag);
@@ -129,11 +123,10 @@ void schedule() {
       cur->ticks = cur->priority;     // 重新将当前线程的ticks再重置为其priority;
       cur->status = TASK_READY;
    } else { 
-      /* 若此线程需要某事件发生后才能继续上cpu运行,
-      不需要将其加入队列,因为当前线程不在就绪队列中。*/
+     
    }
 
-   /* 如果就绪队列中没有可运行的任务,就唤醒idle */
+  
    if (list_empty(&thread_ready_list)) {
       thread_unblock(idle_thread);
    }

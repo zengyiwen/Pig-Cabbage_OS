@@ -57,8 +57,7 @@ int8_t strcmp (const char* a, const char* b) {
       a++;
       b++;
    }
-/* 如果*a小于*b就返回-1,否则就属于*a大于等于*b的情况。在后面的布尔表达式"*a > *b"中,
- * 若*a大于*b,表达式就等于1,否则就表达式不成立,也就是布尔值为0,恰恰表示*a等于*b */
+
    return *a < *b ? -1 : *a > *b;
 }
 
@@ -74,11 +73,10 @@ char* strchr(const char* str, const uint8_t ch) {
    return NULL;
 }
 
-/* 从后往前查找字符串str中首次出现字符ch的地址(不是下标,是地址) */
 char* strrchr(const char* str, const uint8_t ch) {
    ASSERT(str != NULL);
    const char* last_char = NULL;
-   /* 从头到尾遍历一次,若存在ch字符,last_char总是该字符最后一次出现在串中的地址(不是下标,是地址)*/
+  
    while (*str != 0) {
       if (*str == ch) {
 	 last_char = str;
@@ -98,7 +96,7 @@ char* strcat(char* dst_, const char* src_) {
    return dst_;
 }
 
-/* 在字符串str中查找指定字符ch出现的次数 */
+
 uint32_t strchrs(const char* str, uint8_t ch) {
    ASSERT(str != NULL);
    uint32_t ch_cnt = 0;
