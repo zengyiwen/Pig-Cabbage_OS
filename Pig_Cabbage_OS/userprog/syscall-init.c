@@ -16,7 +16,7 @@ uint32_t sys_getpid(void) {
    return running_thread()->pid;
 }
 
-/* 打印字符串str*/
+/* 打印字符串*/
 uint32_t sys_write(char* str) {
    console_put_str(str);
    return strlen(str);
