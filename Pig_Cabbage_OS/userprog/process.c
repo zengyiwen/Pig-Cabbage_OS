@@ -11,7 +11,7 @@
 
 extern void intr_exit(void);
 
-/* 构建用户进程初始上下文信息 */
+/* 构建用户进程初始上下文 */
 void start_process(void* filename_) {
    void* function = filename_;
    struct task_struct* cur = running_thread();
