@@ -35,7 +35,7 @@ struct task_struct* running_thread() {
    return (struct task_struct*)(esp & 0xfffff000);
 }
 
-/* 由kernel_thread去执行function(func_arg) */
+/* 由kernel_thread去执行function(func*/
 static void kernel_thread(thread_func* function, void* func_arg) {
 /* 执行function前要开中断,避免后面的时钟中断被屏蔽,而无法调度其它线程 */
    intr_enable();
