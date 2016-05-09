@@ -4,7 +4,7 @@
 #include "string.h"
 #include "print.h"
 
-/* 任务状态段tss结构 */
+/* 任务状态段tss */
 struct tss {
     uint32_t backlink;
     uint32_t* esp0;
